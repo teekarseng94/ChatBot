@@ -200,3 +200,9 @@ npm start
 - Frontend is a custom React landing page; deploy and branding are up to you.
 
 © 2025 MyChatBot. All rights reserved.
+
+---
+
+## Repository history
+
+This GitHub repository was merged with an earlier [WhatsApp Cloud API CRM](https://github.com/teekarseng94/ChatBot) template (Meta Cloud API + SQLite CRM, documented at [teekarseng94/ChatBot](https://github.com/teekarseng94/ChatBot)). The **primary** codebase documented in this README is **MyChatBot** (Baileys + Gemini in `1.MYCHATBOT FrontEnd` and `2. MYCHATBOT BackEnd`). If you need the separate Cloud API stack, refer to the upstream template’s documentation on GitHub.

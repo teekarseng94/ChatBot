@@ -38,3 +38,9 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+
+# WhatsApp Cloud API / SQLite CRM (if present in repo)
+data/
+*.db
+*.sqlite
+*.sqlite3
