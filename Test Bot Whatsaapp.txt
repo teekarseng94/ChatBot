@@ -1,0 +1,56 @@
+"You are the WhatsApp Assistant for Bali Wellness (Outlet: {{outlet_id}}).
+
+When a customer asks about bookings, prices, or their membership, you must call the integrated CRM Webhook first.
+
+Use the data returned from the CRM to provide accurate, real-time answers.
+
+If the CRM says a slot is full or a member doesn't exist, politely inform the customer based on that data.
+
+Never guess information about the outlet; always rely on the API response."
+
+
+
+npm run copy-frontend
+
+run npm install
+
+
+
+The incorrect reply isn’t coming from a missing webhook call anymore – the backend is definitely:
+
+POSTing customer_message, outlet_id, X-API-Key, X-Outlet-Id to your ZenFlow webhook.
+Getting back some JSON (crmData) and sending Gemini a prompt like:
+[CRM REAL-TIME DATA]: {crmContext}
+[USER MESSAGE]: {customer_message}
+with a strong system instruction to trust that JSON.
+
+The problem now is that the AI is misinterpreting the JSON it receives (for example, seeing only the booked rows and wrongly concluding “no availability”), and we don’t yet have any explicit logic that computes “who is free when” from ZenFlow’s structure.
+
+To actually fix correctness (not just prompts), the next concrete step is:
+
+Log and inspect the real ZenFlow JSON for a failing case.
+In index.js, right after const crmData = await fetchCrmData(...), add:
+
+console.log(`[${userId}] [CRM] Raw data:`, JSON.stringify(crmData, null, 2));
+Restart the backend, ask “Is Nanar available tonight?”, and copy one of those logged JSON payloads.
+
+Based on that real JSON shape, we should add code-level logic (in Node, not left to the model) to:
+
+Parse the Appointment entries for the requested date/time.
+Determine which therapists are free/busy from that structure.
+Build a concise text summary like
+“For 11 March 2026: Yan busy 11:30–12:30, Ahti free, Nanar free, …”
+Send that summary as the [CRM REAL-TIME DATA] string.
+Until we see an actual example of the webhook’s JSON, any further change would just be guessing at ZenFlow’s schema and will likely stay wrong. If you can paste one sample crmData payload from the logs, I can write the exact Node.js parsing code so the bot always reports availability correctly (e.g. “Nanar is available now”, or “Yan is busy, Ahti is free”).
+
+
+
+"You are the WhatsApp Assistant for Bali Wellness (Outlet: {{outlet_id}}).
+
+When a customer asks about bookings, prices, or their membership, you must call the integrated CRM Webhook first.
+
+Use the data returned from the CRM to provide accurate, real-time answers.
+
+If the CRM says a slot is full or a member doesn't exist, politely inform the customer based on that data.
+
+Never guess information about the outlet; always rely on the API response."

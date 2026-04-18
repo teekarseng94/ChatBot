@@ -1,0 +1,14 @@
+# Cloudflare Tunnel - credentials path is relative to this file (backend root).
+# Run setup-tunnel-on-laptop.ps1 to create a new tunnel and fill in the ID.
+# protocol: http2 avoids QUIC "Application error 0x0" / "control stream failure" on some networks.
+
+tunnel: 575a256f-e335-468d-98ef-41e84dd02465
+credentials-file: .cloudflared/575a256f-e335-468d-98ef-41e84dd02465.json
+protocol: http2
+
+ingress:
+  - hostname: mychatbot.website
+    service: http://localhost:3000
+  - hostname: www.mychatbot.website
+    service: http://localhost:3000
+  - service: http_status:404

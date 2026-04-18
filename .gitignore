@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+.env.production
+*.pem
+
+# Firebase / Google service account keys (never commit)
+serviceAccountKey.json
+**/serviceAccountKey.json
+**/*firebase-adminsdk*.json
+**/*-adminsdk-*.json
+
+# Backend session & credentials
+2. MYCHATBOT BackEnd/sessions/
+**/sessions/
+
+# Large binaries (optional local tools; use official installers instead)
+**/cloudflared.exe
+**/cloudflared-windows-amd64.exe
+
+# Build output
+dist/
+**/dist/
+build/
+
+# Logs & OS
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

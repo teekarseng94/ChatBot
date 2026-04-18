@@ -1,0 +1,25 @@
+{
+  "name": "whatsapp-assistant-pro",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "start": "node index.js",
+    "copy-frontend": "node scripts/copy-frontend.js"
+  },
+  "dependencies": {
+    "@google/genai": "^1.34.0",
+    "@google/generative-ai": "^0.24.1",
+    "@whiskeysockets/baileys": "^6.7.21",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^5.2.1",
+    "firebase-admin": "^13.6.0",
+    "pino": "^9.14.0",
+    "qrcode": "^1.5.4",
+    "qrcode-terminal": "^0.12.0",
+    "socket.io": "^4.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0"
+  }
+}

@@ -1,0 +1,14 @@
+# Cloudflare Tunnel config - copy to config.yml and fill in your tunnel ID.
+# Paths are relative to this file (backend root), so it works on any machine.
+
+tunnel: whatsapp-tunnel
+# Credentials file: place the JSON from "cloudflared tunnel create" in .cloudflared/ folder
+# and set the filename to your tunnel ID (e.g. abc123-def456-ghi789.json)
+credentials-file: .cloudflared/YOUR_TUNNEL_ID.json
+
+ingress:
+  - hostname: your-domain.com
+    service: http://localhost:3000
+  - hostname: www.your-domain.com
+    service: http://localhost:3000
+  - service: http_status:404
