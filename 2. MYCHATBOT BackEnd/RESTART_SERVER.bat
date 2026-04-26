@@ -50,13 +50,28 @@ timeout /t 5 /nobreak >nul
 
 REM Start tunnel
 echo    Starting Cloudflare tunnel...
-start /MIN cloudflared.exe tunnel --config config.yml run
-if %ERRORLEVEL% EQU 0 (
-    echo    ✓ Tunnel started
+if exist "cloudflared.bat" (
+    start /MIN cmd /c "call cloudflared.bat tunnel --config config.yml run"
+    echo    Tunnel start command sent via cloudflared.bat
 ) else (
-    echo    ✗ Failed to start tunnel
-    echo    ℹ Make sure config.yml exists and cloudflared.exe is in this folder
+    where cloudflared >nul 2>&1
+    if %ERRORLEVEL% EQU 0 (
+        start /MIN cloudflared tunnel --config config.yml run
+        echo    Tunnel start command sent via PATH cloudflared
+    ) else (
+        echo    Failed to start tunnel
+        echo    cloudflared not found locally or in PATH
+        echo    Run: powershell -ExecutionPolicy Bypass -File .\install-cloudflared.ps1
+        goto :AFTER_TUNNEL
+    )
 )
+
+if %ERRORLEVEL% EQU 0 (
+    echo    Bot + tunnel startup commands executed
+) else (
+    echo    Startup command returned an error
+)
+:AFTER_TUNNEL
 
 echo.
 echo ========================================
@@ -72,7 +87,7 @@ echo   tasklist | findstr cloudflared.exe
 echo.
 echo To view logs, check the minimized windows or run:
 echo   node index.js
-echo   cloudflared.exe tunnel --config config.yml run
+echo   cloudflared.bat tunnel --config config.yml run
 echo.
 echo Visit your website: https://mychatbot.website
 echo.

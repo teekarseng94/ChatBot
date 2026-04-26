@@ -14,25 +14,37 @@ if exist "cloudflared.exe" (
 )
 echo.
 
-echo [2] Checking credentials file...
-set "CREDS=C:\Users\User\.cloudflared\38ecb120-77ef-43e3-9ab3-e16b8c8f481e.json"
-if exist "%CREDS%" (
-    echo ✅ Found: %CREDS%
+echo [2] Checking config.yml...
+if exist "config.yml" (
+    echo ✅ Found
+    for /f "tokens=1,* delims=:" %%A in ('findstr /b /c:"credentials-file:" config.yml') do (
+        set "CREDS_RAW=%%B"
+    )
 ) else (
     echo ❌ NOT FOUND
-    echo    Run: tunnel-login.bat and tunnel-create.bat
 )
 echo.
 
-echo [3] Checking config.yml...
-if exist "config.yml" (
-    echo ✅ Found
-    echo    Credentials path:
-    findstr "credentials-file" config.yml
+echo [3] Checking credentials file from config.yml...
+setlocal EnableDelayedExpansion
+if defined CREDS_RAW (
+    set "CREDS=!CREDS_RAW: =!"
+    set "CREDS=!CREDS:/=\!"
+    if "!CREDS:~0,1!"=="." (
+        set "CREDS=%CD%\!CREDS!"
+    )
+    echo    credentials-file: !CREDS!
+    if exist "!CREDS!" (
+        echo ✅ Found
+    ) else (
+        echo ❌ NOT FOUND
+        echo    Run the desktop reset script to generate/copy credentials.
+    )
 ) else (
-    echo ❌ NOT FOUND
+    echo ❌ credentials-file not found in config.yml
 )
 echo.
+endlocal
 
 echo [4] Checking PM2 tunnel process...
 pm2 describe cloudflared-tunnel >nul 2>&1
