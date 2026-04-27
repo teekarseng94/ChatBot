@@ -35,6 +35,11 @@ if ((pdfjsLib as any).GlobalWorkerOptions) {
 }
 
 function getApiBaseUrl(): string {
+  if (typeof window !== 'undefined') {
+    const h = window.location.hostname;
+    // On production domains, always use same-origin API to avoid stale env base URLs.
+    if (h === 'mychatbot.website' || h === 'www.mychatbot.website') return '';
+  }
   const url = import.meta.env.VITE_API_BASE_URL;
   if (url && typeof url === 'string') return url.replace(/\/$/, '');
   return '';
@@ -42,13 +47,13 @@ function getApiBaseUrl(): string {
 
 /** Socket.io URL: use env if set; on localhost use backend :3000; else same origin (works with tunnel). */
 function getSocketUrl(): string {
-  const envUrl = import.meta.env.VITE_API_BASE_URL;
-  if (envUrl && typeof envUrl === 'string') return envUrl.replace(/\/$/, '');
   if (typeof window !== 'undefined') {
     const h = window.location.hostname;
     if (h === 'localhost' || h === '127.0.0.1') return 'http://localhost:3000';
-    if (h === 'mychatbot.website' || h === 'www.mychatbot.website') return `https://${h}`;
+    if (h === 'mychatbot.website' || h === 'www.mychatbot.website') return window.location.origin;
   }
+  const envUrl = import.meta.env.VITE_API_BASE_URL;
+  if (envUrl && typeof envUrl === 'string') return envUrl.replace(/\/$/, '');
   return '';
 }
 
